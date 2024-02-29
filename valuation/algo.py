@@ -15,10 +15,10 @@ class FixedAsset:
                 ) / self.fa.useful_life
 
     def book_value(self):
-        return self.fa.book_value - self.fa.depreciation
+        return self.fa.book_value - self.depreciation()
 
     def accumulated_depreciation(self):
-        return self.fa.accumulated_depreciation + self.fa.depreciation
+        return self.fa.accumulated_depreciation + self.depreciation()
 
     @property
     def fixed_asset(self):
