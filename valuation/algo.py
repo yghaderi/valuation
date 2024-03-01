@@ -2,17 +2,25 @@ from valuation import models
 
 
 class FixedAsset:
-    def __init__(self, fixed_asset: models.FixedAsset):
+    def __init__(self, fixed_asset: models.FixedAsset, year: float = 1):
         self.fa = fixed_asset
+        self.year = year
+
+    def remain_useful_life(self):
+        return
 
     def depreciation(self):
         match self.fa.depreciation_method:
             case "straight_line":
-                return (
-                    self.fa.book_value
-                    + self.fa.accumulated_depreciation
-                    - self.fa.salvage_value
-                ) / self.fa.useful_life
+                depr = (
+                               self.fa.book_value
+                               + self.fa.accumulated_depreciation
+                               - self.fa.salvage_value
+                       ) / self.fa.useful_life
+                remain_useful_life = self.fa.useful_life - (self.fa.accumulated_depreciation / depr)
+                if remain_useful_life > 0:
+                    return depr * min(self.year, remain_useful_life)
+                return 0
 
     def book_value(self):
         return self.fa.book_value - self.depreciation()
