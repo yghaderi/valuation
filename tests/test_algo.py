@@ -27,18 +27,16 @@ class TestFixedAsset(unittest.TestCase):
         self.fixed_asset3 = algo.FixedAsset(self.fixed_asset2).fixed_asset
 
     def test_straight_line_methode_year1(self):
-        self.assertEqual(self.fixed_asset1 .book_value, 500)
-        self.assertEqual(self.fixed_asset1 .accumulated_depreciation, 600)
-        self.assertEqual(self.fixed_asset1 .depreciation, 500)
+        self.assertEqual(self.fixed_asset1.book_value, 500)
+        self.assertEqual(self.fixed_asset1.accumulated_depreciation, 600)
+        self.assertEqual(self.fixed_asset1.depreciation, 500)
 
     def test_straight_line_methode_year2(self):
-        self.assertEqual(self.fixed_asset2 .book_value, 100)
-        self.assertEqual(self.fixed_asset2 .accumulated_depreciation, 1000)
-        self.assertEqual(self.fixed_asset2 .depreciation, 400)
+        self.assertEqual(self.fixed_asset2.book_value, 100)
+        self.assertEqual(self.fixed_asset2.accumulated_depreciation, 1000)
+        self.assertEqual(self.fixed_asset2.depreciation, 400)
 
     def test_straight_line_methode_year3(self):
-        self.assertEqual(self.fixed_asset3 .book_value, 100)
-        self.assertEqual(self.fixed_asset3 .accumulated_depreciation, 1000)
-        self.assertEqual(self.fixed_asset3 .depreciation, 0)
-
-
+        self.assertEqual(self.fixed_asset3.book_value, 100)
+        self.assertEqual(self.fixed_asset3.accumulated_depreciation, 1000)
+        self.assertEqual(self.fixed_asset3.depreciation, 0)
