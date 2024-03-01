@@ -6,6 +6,22 @@ class PydanticBaseModel(BaseModel):
     model_config = ConfigDict(frozen=True)
 
 
+class Company(PydanticBaseModel):
+    id: int
+    name: str
+
+
+class CostingMethod(PydanticBaseModel):
+    method: Literal["variable", "absorption"]
+
+
+class SelectInput(BaseModel):
+    id: int
+    cost_center_id: int
+    name: str
+    category: Literal["fixed_asset"]
+
+
 class CostAllocation(PydanticBaseModel):
     cost_center_id: int
     method: Literal["fixed", "variable"]

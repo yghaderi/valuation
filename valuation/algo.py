@@ -13,11 +13,13 @@ class FixedAsset:
         match self.fa.depreciation_method:
             case "straight_line":
                 depr = (
-                               self.fa.book_value
-                               + self.fa.accumulated_depreciation
-                               - self.fa.salvage_value
-                       ) / self.fa.useful_life
-                remain_useful_life = self.fa.useful_life - (self.fa.accumulated_depreciation / depr)
+                    self.fa.book_value
+                    + self.fa.accumulated_depreciation
+                    - self.fa.salvage_value
+                ) / self.fa.useful_life
+                remain_useful_life = self.fa.useful_life - (
+                    self.fa.accumulated_depreciation / depr
+                )
                 if remain_useful_life > 0:
                     return depr * min(self.year, remain_useful_life)
                 return 0
@@ -35,5 +37,6 @@ class FixedAsset:
                 "depreciation": self.depreciation(),
                 "book_value": self.book_value(),
                 "accumulated_depreciation": self.accumulated_depreciation(),
-            }
+            },
+            deep=True,
         )
