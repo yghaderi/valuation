@@ -6,20 +6,8 @@ class PydanticBaseModel(BaseModel):
     model_config = ConfigDict(frozen=True)
 
 
-class Company(PydanticBaseModel):
-    id: int
-    name: str
-
-
 class CostingMethod(PydanticBaseModel):
     method: Literal["variable", "absorption"]
-
-
-class SelectInput(BaseModel):
-    id: int
-    cost_center_id: int
-    name: str
-    category: Literal["fixed_asset"]
 
 
 class CostAllocation(PydanticBaseModel):
@@ -45,7 +33,7 @@ class FixedAsset(PydanticBaseModel):
     @field_validator("cost_allocation")
     @classmethod
     def passwords_match(
-        cls, v: Optional[list[CostAllocation]]
+            cls, v: Optional[list[CostAllocation]]
     ) -> list[CostAllocation] | None:
         if v:
             sum_ratio = sum([i.ratio for i in v])
@@ -53,3 +41,30 @@ class FixedAsset(PydanticBaseModel):
                 return v
             raise ValueError(f"Sum of 'ratio' should be '1' but is {sum_ratio!r}")
         return v
+
+
+class Input(BaseModel):
+    id: int
+    cost_center_id: int
+    name: str
+    category: Literal["fixed_asset"]
+    param: FixedAsset
+
+
+class Output(BaseModel):
+    pass
+
+
+class CostCenter(PydanticBaseModel):
+    id: int
+    name: str
+    category: Literal["product", "service", "operational"]
+    input: list[Input]
+    output: list[Output]
+
+
+class Valuation(PydanticBaseModel):
+    id: int
+    name: str
+    category: Literal["production"]
+    cost_center: list[CostCenter]
