@@ -24,7 +24,6 @@ class FixedAsset(PydanticBaseModel):
     salvage_value: PositiveInt
     accumulated_depreciation: int
     depreciation: int
-    maintenance: int
     depreciation_method: Literal[
         "straight_line", "declining_balance", "double_declining_balance"
     ]
@@ -32,7 +31,7 @@ class FixedAsset(PydanticBaseModel):
 
     @field_validator("cost_allocation")
     @classmethod
-    def passwords_match(
+    def cost_allocation_ratio(
             cls, v: Optional[list[CostAllocation]]
     ) -> list[CostAllocation] | None:
         if v:
@@ -41,6 +40,30 @@ class FixedAsset(PydanticBaseModel):
                 return v
             raise ValueError(f"Sum of 'ratio' should be '1' but is {sum_ratio!r}")
         return v
+
+
+class BaseRateChange(PydanticBaseModel):
+    id: int
+    f: dict[str:float] | float
+
+
+class Rate(PydanticBaseModel):
+    id: int
+    rate: int
+    extra_change: Optional[dict[str:float]] = None
+
+
+#####################################################################################################
+
+
+# demo
+class RawMaterial(PydanticBaseModel):
+    id: int
+    name: str
+    unit: int
+    rate: int
+    inventory: int
+    cost_allocation: int
 
 
 class Input(BaseModel):
