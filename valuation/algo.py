@@ -9,7 +9,9 @@ class FinancialYear:
 
     def generate(self):
         date = self.param.date
-        new_param = self.param.model_copy(update={"date": date.replace(year=date.year + 1)})
+        new_param = self.param.model_copy(
+            update={"date": date.replace(year=date.year + 1)}
+        )
         self.param = new_param
         yield new_param
 
@@ -26,16 +28,16 @@ class FixedAsset:
         match self.param.depreciation_method:
             case "straight_line":
                 depr = (
-                               self.param.book_value
-                               + self.param.accumulated_depreciation
-                               - self.param.salvage_value
-                       ) / self.param.useful_life
+                    self.param.book_value
+                    + self.param.accumulated_depreciation
+                    - self.param.salvage_value
+                ) / self.param.useful_life
                 remain_useful_life = self.param.useful_life - (
-                        self.param.accumulated_depreciation / depr
+                    self.param.accumulated_depreciation / depr
                 )
                 if remain_useful_life > 0:
                     return depr * min(self.year, remain_useful_life)
-                return 0.
+                return 0.0
 
     def book_value(self) -> float:
         return self.param.book_value - self.depreciation()

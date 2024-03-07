@@ -12,13 +12,12 @@ class CostingMethod(BaseModel):
 
 
 class CostAllocation(BaseModel):
-    cost_center_id: int
     method: Literal["fixed", "variable"]
     ratio: float
 
 
 class FixedAsset(BaseModel):
-    id: int
+    id: str
     name: str
     book_value: PositiveInt
     useful_life: PositiveInt
@@ -33,7 +32,7 @@ class FixedAsset(BaseModel):
     @field_validator("cost_allocation")
     @classmethod
     def cost_allocation_ratio(
-            cls, v: Optional[list[CostAllocation]]
+        cls, v: Optional[list[CostAllocation]]
     ) -> list[CostAllocation] | None:
         if v:
             sum_ratio = sum([i.ratio for i in v])
@@ -44,12 +43,12 @@ class FixedAsset(BaseModel):
 
 
 class BaseRateChange(BaseModel):
-    id: int
+    id: str
     f: dict | float
 
 
 class Rate(BaseModel):
-    id: int
+    id: str
     rate: int
     extra_change: Optional[dict] = None
 
@@ -68,7 +67,7 @@ class Inventory(BaseModel):
 
 
 class RawMaterial(BaseModel):
-    id: int
+    id: str
     name: str
     unit: int
     rate: Rate
@@ -82,10 +81,7 @@ class FinancialYear(BaseModel):
 
 
 class Input(BaseModel):
-    id: int
-    cost_center_id: int
-    name: str
-    fixed_asses: Optional[list[FixedAsset]] = None
+    fixed_asses: Optional[list[FixedAsset]] = []
 
 
 class Output(BaseModel):
@@ -93,19 +89,36 @@ class Output(BaseModel):
 
 
 class CostCenter(BaseModel):
-    id: int
+    id: str
     name: str
     category: Literal["product", "service", "operational"]
-    input: Optional[Input] = None
-    output: Optional[Output] = None
+    input: Optional[Input] = []
+    output: Optional[Output] = []
 
 
 class Valuation(BaseModel):
-    id: int
+    id: str
     name: str
     financial_year: FinancialYear
     category: Literal["production"]
     cost_centers: list[CostCenter]
+
+
+class GenFixedAsset(FixedAsset):
+    year: int = 0
+
+
+class GenInput(BaseModel):
+    fixed_asses: Optional[list[list[GenFixedAsset]]] = []
+
+
+class GenCostCenter(BaseModel):
+    id: str
+    inputs: Optional[GenInput] = []
+
+
+class GenValuation(BaseModel):
+    cost_centers: list[GenCostCenter] = []
 
 
 ########################################################################################################
