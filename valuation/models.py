@@ -77,7 +77,7 @@ class RawMaterial(BaseModel):
 
 
 class FinancialYear(BaseModel):
-    start: dt.date
+    date: dt.date
     length: PositiveInt
 
 
@@ -103,8 +103,9 @@ class CostCenter(BaseModel):
 class Valuation(BaseModel):
     id: int
     name: str
+    financial_year: FinancialYear
     category: Literal["production"]
-    cost_center: list[CostCenter]
+    cost_centers: list[CostCenter]
 
 
 ########################################################################################################
