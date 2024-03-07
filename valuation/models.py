@@ -53,17 +53,29 @@ class Rate(PydanticBaseModel):
     extra_change: Optional[dict[str:float]] = None
 
 
-#####################################################################################################
+class NormFinancialRatio(PydanticBaseModel):
+    current: float
+    target: float
+    begin_improvement_year: int
+    mature_year: int
 
 
-# demo
+class Inventory(PydanticBaseModel):
+    qty: float
+    management_approach: int
+    norm_ratio: NormFinancialRatio
+
+
 class RawMaterial(PydanticBaseModel):
     id: int
     name: str
     unit: int
-    rate: int
-    inventory: int
+    rate: Rate
+    inventory: Inventory
     cost_allocation: int
+
+
+#####################################################################################################
 
 
 class Input(BaseModel):
