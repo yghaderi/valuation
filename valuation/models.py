@@ -3,21 +3,21 @@ import datetime as dt
 from pydantic import BaseModel, ConfigDict, PositiveInt, field_validator
 
 
-class PydanticBaseModel(BaseModel):
-    model_config = ConfigDict(frozen=True)
+# class BaseModel(BaseModel):
+#     model_config = ConfigDict(frozen=True)
 
 
-class CostingMethod(PydanticBaseModel):
+class CostingMethod(BaseModel):
     method: Literal["variable", "absorption"]
 
 
-class CostAllocation(PydanticBaseModel):
+class CostAllocation(BaseModel):
     cost_center_id: int
     method: Literal["fixed", "variable"]
     ratio: float
 
 
-class FixedAsset(PydanticBaseModel):
+class FixedAsset(BaseModel):
     id: int
     name: str
     book_value: PositiveInt
@@ -43,31 +43,31 @@ class FixedAsset(PydanticBaseModel):
         return v
 
 
-class BaseRateChange(PydanticBaseModel):
+class BaseRateChange(BaseModel):
     id: int
-    f: dict[str:float] | float
+    f: dict | float
 
 
-class Rate(PydanticBaseModel):
+class Rate(BaseModel):
     id: int
     rate: int
-    extra_change: Optional[dict[str:float]] = None
+    extra_change: Optional[dict] = None
 
 
-class NormFinancialRatio(PydanticBaseModel):
+class NormFinancialRatio(BaseModel):
     current: float
     target: float
     begin_improvement_year: int
     mature_year: int
 
 
-class Inventory(PydanticBaseModel):
+class Inventory(BaseModel):
     qty: float
     management_approach: int
     norm_ratio: NormFinancialRatio
 
 
-class RawMaterial(PydanticBaseModel):
+class RawMaterial(BaseModel):
     id: int
     name: str
     unit: int
@@ -76,12 +76,9 @@ class RawMaterial(PydanticBaseModel):
     cost_allocation: int
 
 
-class FinancialYear(PydanticBaseModel):
+class FinancialYear(BaseModel):
     start: dt.date
     length: PositiveInt
-
-
-#####################################################################################################
 
 
 class Input(BaseModel):
@@ -95,7 +92,7 @@ class Output(BaseModel):
     pass
 
 
-class CostCenter(PydanticBaseModel):
+class CostCenter(BaseModel):
     id: int
     name: str
     category: Literal["product", "service", "operational"]
@@ -103,7 +100,7 @@ class CostCenter(PydanticBaseModel):
     output: Optional[Output] = None
 
 
-class Valuation(PydanticBaseModel):
+class Valuation(BaseModel):
     id: int
     name: str
     category: Literal["production"]
@@ -113,7 +110,6 @@ class Valuation(PydanticBaseModel):
 ########################################################################################################
 # Financial Statements
 #######################################################################################################
-class BalanceSheet(PydanticBaseModel):
+class BalanceSheet(BaseModel):
     fy: dt.date
     fixed_asset: int
-
