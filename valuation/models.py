@@ -1,4 +1,5 @@
 from typing import Literal, Optional
+import datetime as dt
 from pydantic import BaseModel, ConfigDict, PositiveInt, field_validator
 
 
@@ -75,6 +76,11 @@ class RawMaterial(PydanticBaseModel):
     cost_allocation: int
 
 
+class FinancialYear(PydanticBaseModel):
+    start: dt.date
+    length: PositiveInt
+
+
 #####################################################################################################
 
 
@@ -82,8 +88,7 @@ class Input(BaseModel):
     id: int
     cost_center_id: int
     name: str
-    category: Literal["fixed_asset"]
-    param: FixedAsset
+    fixed_asses: Optional[list[FixedAsset]] = None
 
 
 class Output(BaseModel):
@@ -94,8 +99,8 @@ class CostCenter(PydanticBaseModel):
     id: int
     name: str
     category: Literal["product", "service", "operational"]
-    input: list[Input]
-    output: list[Output]
+    input: Optional[Input] = None
+    output: Optional[Output] = None
 
 
 class Valuation(PydanticBaseModel):
@@ -103,3 +108,12 @@ class Valuation(PydanticBaseModel):
     name: str
     category: Literal["production"]
     cost_center: list[CostCenter]
+
+
+########################################################################################################
+# Financial Statements
+#######################################################################################################
+class BalanceSheet(PydanticBaseModel):
+    fy: dt.date
+    fixed_asset: int
+

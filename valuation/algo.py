@@ -13,12 +13,12 @@ class FixedAsset:
         match self.fa.depreciation_method:
             case "straight_line":
                 depr = (
-                    self.fa.book_value
-                    + self.fa.accumulated_depreciation
-                    - self.fa.salvage_value
-                ) / self.fa.useful_life
+                               self.fa.book_value
+                               + self.fa.accumulated_depreciation
+                               - self.fa.salvage_value
+                       ) / self.fa.useful_life
                 remain_useful_life = self.fa.useful_life - (
-                    self.fa.accumulated_depreciation / depr
+                        self.fa.accumulated_depreciation / depr
                 )
                 if remain_useful_life > 0:
                     return depr * min(self.year, remain_useful_life)
@@ -40,3 +40,14 @@ class FixedAsset:
             },
             deep=True,
         )
+
+
+class BaseRateChange:
+    def __init__(self, param: models.BaseRateChange):
+        self.param = param
+
+    @property
+    def base_rate_change(self):
+        if isinstance(self.param.f, dict):
+            return self.param
+        return {i: i for i in range(5)}
