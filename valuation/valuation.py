@@ -37,8 +37,15 @@ class Valuation:
                 if input_.fixed_asses:
                     fixed_asses: list[list[models.GenFixedAsset]] = input_.fixed_asses
                     for fa in fixed_asses:
-                        self.bs_records.append([{"year": i.year, "fixed_asses": i.book_value} for i in fa])
-                        self.is_records.append([{"year": i.year, "depreciation": i.depreciation} for i in fa])
+                        self.bs_records.append(
+                            [{"year": i.year, "fixed_asses": i.book_value} for i in fa]
+                        )
+                        self.is_records.append(
+                            [
+                                {"year": i.year, "depreciation": i.depreciation}
+                                for i in fa
+                            ]
+                        )
 
     def balance_sheet(self) -> list[models.BalanceSheet]:
         records = []

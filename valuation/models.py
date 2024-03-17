@@ -32,7 +32,7 @@ class FixedAsset(BaseModel):
     @field_validator("cost_allocation")
     @classmethod
     def cost_allocation_ratio(
-            cls, v: Optional[list[CostAllocation]]
+        cls, v: Optional[list[CostAllocation]]
     ) -> list[CostAllocation] | None:
         if v:
             sum_ratio = sum([i.ratio for i in v])
@@ -119,7 +119,6 @@ class Product(BaseModel):
     consumption: Consumption
 
 
-
 class FinancialYear(BaseModel):
     date: dt.date
     length: PositiveInt
@@ -164,6 +163,23 @@ class GenCostCenter(BaseModel):
 
 class GenValuation(BaseModel):
     cost_centers: list[GenCostCenter] = []
+
+
+########################################################################################################
+# Generated Models
+########################################################################################################
+
+
+class GenProduct(BaseModel):
+    id: str
+    name: str
+    unit: str
+    capacity: float
+    production: float
+    improve: Optional[list[Improve]] = []
+    rate: Rate
+    inventory: Inventory
+    consumption: Consumption
 
 
 ########################################################################################################

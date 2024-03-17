@@ -61,8 +61,19 @@ class FixedAsset:
 
 
 class Product:
-    def __init__(self, param: models.Product):
+    def __init__(self, param: models.Product, year: dt.date):
         self.param = param
+        self.year = year
+
+    def handle_production_limits(self):
+        """بیشینه مقدار تولید رو بر مبنایِ ورودی‌های محاسبه می‌کنه"""
+        pass
+
+    def improve_f(self):
+        """نرخِ بهبودِ تولید رو برمی‌گردونه"""
+        if self.param.improve:
+            return [i.f for i in self.param.improve if i.year == self.year][0] + 1
+        return 1
 
     def calc_sale_and_end_inv(self):
         """
@@ -76,6 +87,30 @@ class Product:
         b = np.array([0, goods_for_sales])
         x = np.linalg.solve(a, b)
         return x
+
+    def calc_capacity(self):
+        """
+        ظرفیتِ تولید رو بر مبنای طرح‌هایِ توسعه محاسبه‌ می‌کنه
+
+
+        Todo: بعد از توسعه‌یِ طرح‌هایِ توسعه این بخش تکمیل شه
+        """
+        return self.param.capacity
+
+    def calc_production(self):
+        """
+        مقدارِ تولید رو بر مبنایِ نرخِ بهبود و طرح‌هایِ توسعه محاسبه می‌کنه
+
+        Todo: بعد از توسعه‌یِ طرح‌هایِ توسعه این بخش تکمیل شه
+        """
+        return self.param.production * self.improve_f()
+
+    def calc_consumption(self):
+        """مقدار و مبلغِ مصرفِ از هر نهاده رو برمی‌گردونه"""
+        pass
+
+    def new(self):
+        pass
 
 
 class BaseRateChange:
