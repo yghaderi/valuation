@@ -1,5 +1,7 @@
 import datetime as dt
 from typing import Generator
+import numpy as np
+
 from valuation import models
 
 
@@ -28,12 +30,12 @@ class FixedAsset:
         match self.param.depreciation_method:
             case "straight_line":
                 depr = (
-                    self.param.book_value
-                    + self.param.accumulated_depreciation
-                    - self.param.salvage_value
-                ) / self.param.useful_life
+                               self.param.book_value
+                               + self.param.accumulated_depreciation
+                               - self.param.salvage_value
+                       ) / self.param.useful_life
                 remain_useful_life = self.param.useful_life - (
-                    self.param.accumulated_depreciation / depr
+                        self.param.accumulated_depreciation / depr
                 )
                 if remain_useful_life > 0:
                     return depr * min(self.year, remain_useful_life)
@@ -56,6 +58,24 @@ class FixedAsset:
         )
         self.param = new_param
         yield new_param
+
+
+class Product:
+    def __init__(self, param: models.Product):
+        self.param = param
+
+    def calc_sale_and_end_inv(self):
+        """
+        Equation
+        InventoryTurnover * EndingInventory - UnitSales = 0
+        EndingInventory + UnitSales = GoodsForSales
+        :return:
+        """
+        goods_for_sales = self.param.inventory.beginning.qty + self.param.production
+        a = np.array([[self.param.inventory.norm_ratio.target, -1], [1, 1]])
+        b = np.array([0, goods_for_sales])
+        x = np.linalg.solve(a, b)
+        return x
 
 
 class BaseRateChange:

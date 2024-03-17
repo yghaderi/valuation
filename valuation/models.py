@@ -112,11 +112,12 @@ class Product(BaseModel):
     name: str
     unit: str
     capacity: float
-    productions: float
+    production: float
     improve: Optional[list[Improve]] = []
     rate: Rate
     inventory: Inventory
     consumption: Consumption
+
 
 
 class FinancialYear(BaseModel):
