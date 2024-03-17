@@ -32,7 +32,7 @@ class FixedAsset(BaseModel):
     @field_validator("cost_allocation")
     @classmethod
     def cost_allocation_ratio(
-        cls, v: Optional[list[CostAllocation]]
+            cls, v: Optional[list[CostAllocation]]
     ) -> list[CostAllocation] | None:
         if v:
             sum_ratio = sum([i.ratio for i in v])
@@ -47,10 +47,16 @@ class BaseRateChange(BaseModel):
     f: dict | float
 
 
+class ExtraChange(BaseModel):
+    year: dt.date
+    f: float
+
+
 class Rate(BaseModel):
     id: str
-    rate: int
-    extra_change: Optional[dict] = None
+    buy_price: float
+    sale_price: float
+    extra_change: Optional[list[ExtraChange]] = None
 
 
 class NormFinancialRatio(BaseModel):
@@ -60,9 +66,21 @@ class NormFinancialRatio(BaseModel):
     mature_year: int
 
 
+class InventoryManagementApproach(BaseModel):
+    excess: Literal["sale", "nothing"]
+    deficit: Literal["buy", "nothing"]
+
+
+class BeginningInventory(BaseModel):
+    qty: float
+    amount: int
+
+
 class Inventory(BaseModel):
     qty: float
-    management_approach: int
+    beginning: BeginningInventory
+    rate: Rate
+    management_approach: InventoryManagementApproach
     norm_ratio: NormFinancialRatio
 
 
@@ -72,7 +90,33 @@ class RawMaterial(BaseModel):
     unit: int
     rate: Rate
     inventory: Inventory
-    cost_allocation: int
+
+
+class Improve(BaseModel):
+    year: dt.date
+    f: float
+
+
+class ConsRawMaterial(BaseModel):
+    rm_id: str  # raw-material id
+    ratio: float
+    based_on: Literal["capacity", "productions"]
+
+
+class Consumption(BaseModel):
+    raw_material: Optional[list[ConsRawMaterial]] = []
+
+
+class Product(BaseModel):
+    id: str
+    name: str
+    unit: str
+    capacity: float
+    productions: float
+    improve: Optional[list[Improve]] = []
+    rate: Rate
+    inventory: Inventory
+    consumption: Consumption
 
 
 class FinancialYear(BaseModel):
@@ -85,7 +129,7 @@ class Input(BaseModel):
 
 
 class Output(BaseModel):
-    pass
+    products: list[Product]
 
 
 class CostCenter(BaseModel):
@@ -96,7 +140,7 @@ class CostCenter(BaseModel):
     output: Optional[Output] = []
 
 
-class Valuation(BaseModel):
+class Firm(BaseModel):
     id: str
     name: str
     financial_year: FinancialYear
