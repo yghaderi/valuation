@@ -32,7 +32,7 @@ class FixedAsset(BaseModel):
     @field_validator("cost_allocation")
     @classmethod
     def cost_allocation_ratio(
-        cls, v: Optional[list[CostAllocation]]
+            cls, v: Optional[list[CostAllocation]]
     ) -> list[CostAllocation] | None:
         if v:
             sum_ratio = sum([i.ratio for i in v])
@@ -42,9 +42,15 @@ class FixedAsset(BaseModel):
         return v
 
 
+class RateChange(BaseModel):
+    year: dt.date
+    f: float
+
+
 class BaseRateChange(BaseModel):
     id: str
-    f: dict | float
+    name: str
+    rates: list[RateChange]
 
 
 class ExtraChange(BaseModel):
@@ -140,9 +146,14 @@ class CostCenter(BaseModel):
     output: Optional[Output] = []
 
 
+class BaseParam(BaseModel):
+    base_rate_change: list[BaseRateChange]
+
+
 class Firm(BaseModel):
     id: str
     name: str
+    base_param: BaseParam
     financial_year: FinancialYear
     category: Literal["production"]
     cost_centers: list[CostCenter]

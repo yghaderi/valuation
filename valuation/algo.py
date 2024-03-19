@@ -75,34 +75,44 @@ class Product:
             return [i.f for i in self.param.improve if i.year == self.year][0] + 1
         return 1
 
-    def calc_sale_and_end_inv(self):
+    def calc_sale_and_end_inv(self) -> list[float]:
         """
+        .. raw:: html
+
+            <div dir="rtl">
+                مقدارِ موجودیِ پایانِ دوره و فروش/مصرف رو محاسبه می‌کنه
+            </div>
+
         Equation
         InventoryTurnover * EndingInventory - UnitSales = 0
         EndingInventory + UnitSales = GoodsForSales
-        :return:
+
+
+        Returns
+        -------
+        list[float, float]
+            [0]: موجودیِ پایانِ دوره
+            [1]: فروش/مصرف
         """
         goods_for_sales = self.param.inventory.beginning.qty + self.param.production
         a = np.array([[self.param.inventory.norm_ratio.target, -1], [1, 1]])
         b = np.array([0, goods_for_sales])
-        x = np.linalg.solve(a, b)
+        x = np.linalg.solve(a, b).tolist()
         return x
 
     def calc_capacity(self):
         """
         ظرفیتِ تولید رو بر مبنای طرح‌هایِ توسعه محاسبه‌ می‌کنه
-
-
-        Todo: بعد از توسعه‌یِ طرح‌هایِ توسعه این بخش تکمیل شه
         """
+        # TODO: بعد از توسعه‌یِ طرح‌هایِ توسعه این بخش تکمیل شه
         return self.param.capacity
 
     def calc_production(self):
         """
         مقدارِ تولید رو بر مبنایِ نرخِ بهبود و طرح‌هایِ توسعه محاسبه می‌کنه
-
-        Todo: بعد از توسعه‌یِ طرح‌هایِ توسعه این بخش تکمیل شه
         """
+
+        # TODO: بعد از توسعه‌یِ طرح‌هایِ توسعه این بخش تکمیل شه
         return self.param.production * self.improve_f()
 
     def calc_consumption(self):
