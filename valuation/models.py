@@ -147,6 +147,7 @@ class CostCenter(BaseModel):
 
 
 class BaseParam(BaseModel):
+    financial_year: FinancialYear
     base_rate_change: list[BaseRateChange]
 
 
@@ -154,7 +155,6 @@ class Firm(BaseModel):
     id: str
     name: str
     base_param: BaseParam
-    financial_year: FinancialYear
     category: Literal["production"]
     cost_centers: list[CostCenter]
 
